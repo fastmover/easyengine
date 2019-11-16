@@ -1337,7 +1337,7 @@ def setupLetsEncrypt(self, ee_domain_name):
         ssl= archivedCertificateHandle(self,ee_domain_name,ee_wp_email)
     else:
         Log.warn(self,"Please Wait while we fetch SSL Certificate for your site.\nIt may take time depending upon network.")
-        ssl = EEShellExec.cmd_exec(self, "./letsencrypt-auto certonly --webroot -w /var/www/{0}/htdocs/ -d {0} -d www.{0} "
+        ssl = EEShellExec.cmd_exec(self, "./letsencrypt-auto certonly --webroot -w /var/www/{0}/htdocs/ -d {0} "
                                 .format(ee_domain_name)
                                 + "--email {0} --text --agree-tos".format(ee_wp_email))
     if ssl:
@@ -1390,7 +1390,7 @@ def renewLetsEncrypt(self, ee_domain_name):
 
     Log.info(self, "Renewing SSl cert for https://{0}".format(ee_domain_name))
 
-    ssl = EEShellExec.cmd_exec(self, "./letsencrypt-auto --renew-by-default certonly --webroot -w /var/www/{0}/htdocs/ -d {0} -d www.{0} "
+    ssl = EEShellExec.cmd_exec(self, "./letsencrypt-auto --renew-by-default certonly --webroot -w /var/www/{0}/htdocs/ -d {0} "
                                 .format(ee_domain_name)
                                 + "--email {0} --text --agree-tos".format(ee_wp_email))
     mail_list = ''
@@ -1434,7 +1434,7 @@ def httpsRedirect(self,ee_domain_name,redirect=True):
                                       encoding='utf-8', mode='w')
                 sslconf.write("server {\n"
                                      "\tlisten 80;\n" +
-                                     "\tserver_name www.{0} {0};\n".format(ee_domain_name) +
+                                     "\tserver_name {0};\n".format(ee_domain_name) +
                                      "\treturn 301 https://{0}".format(ee_domain_name)+"$request_uri;\n}" )
                 sslconf.close()
                 # Nginx Configation into GIT
@@ -1467,7 +1467,7 @@ def archivedCertificateHandle(self,domain,ee_wp_email):
             Log.error(self,"/etc/letsencrypt/live/{0}/cert.pem file is missing.".format(domain))
     if check_prompt == "1":
         Log.info(self,"Please Wait while we reinstall SSL Certificate for your site.\nIt may take time depending upon network.")
-        ssl = EEShellExec.cmd_exec(self, "./letsencrypt-auto certonly --reinstall --webroot -w /var/www/{0}/htdocs/ -d {0} -d www.{0} "
+        ssl = EEShellExec.cmd_exec(self, "./letsencrypt-auto certonly --reinstall --webroot -w /var/www/{0}/htdocs/ -d {0} "
                                 .format(domain)
                                 + "--email {0} --text --agree-tos".format(ee_wp_email))
     elif check_prompt == "2" :
@@ -1481,7 +1481,7 @@ def archivedCertificateHandle(self,domain,ee_wp_email):
 
     elif check_prompt == "3":
         Log.info(self,"Please Wait while we renew SSL Certificate for your site.\nIt may take time depending upon network.")
-        ssl = EEShellExec.cmd_exec(self, "./letsencrypt-auto --renew-by-default certonly --webroot -w /var/www/{0}/htdocs/ -d {0} -d www.{0} "
+        ssl = EEShellExec.cmd_exec(self, "./letsencrypt-auto --renew-by-default certonly --webroot -w /var/www/{0}/htdocs/ -d {0} "
                                 .format(domain)
                                 + "--email {0} --text --agree-tos".format(ee_wp_email))
     else:
